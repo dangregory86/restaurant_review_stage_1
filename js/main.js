@@ -4,6 +4,17 @@ let restaurants,
 var map
 var markers = []
 
+// check and register a service worker
+// code taken from https://nooshu.github.io/blog/2016/07/22/implementing-a-service-worker/
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+        // register the service worker script
+        .register('/sw.js')
+        // using promises tell us if successful or there was an error
+        .then(reg => {console.info('Service Worker registration successful: ', reg)})
+        .catch(err => {console.warn('Service Worker setup failed: ', err)});
+}
+
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
@@ -80,13 +91,14 @@ window.initMap = () => {
     center: loc,
     scrollwheel: false
   });
-  updateRestaurants();
+
+  updateRestaurants(self.map);
 }
 
 /**
  * Update page and map for current restaurants.
  */
-updateRestaurants = () => {
+updateRestaurants = (map) => {
   const cSelect = document.getElementById('cuisines-select');
   const nSelect = document.getElementById('neighborhoods-select');
 
@@ -136,11 +148,13 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  * Create restaurant HTML.
  */
 createRestaurantHTML = (restaurant) => {
+  const link = document.createElement('a');
   const li = document.createElement('li');
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.alt = "Image of the " + restaurant.name + " restaurant";
   li.append(image);
 
   const name = document.createElement('h1');
@@ -154,13 +168,9 @@ createRestaurantHTML = (restaurant) => {
   const address = document.createElement('p');
   address.innerHTML = restaurant.address;
   li.append(address);
-
-  const more = document.createElement('a');
-  more.innerHTML = 'View Details';
-  more.href = DBHelper.urlForRestaurant(restaurant);
-  li.append(more)
-
-  return li
+  link.href = DBHelper.urlForRestaurant(restaurant);
+  link.append(li);
+  return link;
 }
 
 /**
