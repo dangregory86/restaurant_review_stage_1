@@ -1,9 +1,18 @@
 /**
  * Common database helper functions.
  */
-class DBHelper {
+ // check and register a service worker
+ // code taken from https://nooshu.github.io/blog/2016/07/22/implementing-a-service-worker/
+ if ('serviceWorker' in navigator) {
+     navigator.serviceWorker
+         // register the service worker script
+         .register('/sw.js')
+         // using promises tell us if successful or there was an error
+         .then(reg => {console.info('Service Worker registration successful: ', reg)})
+         .catch(err => {console.warn('Service Worker setup failed: ', err)});
+ }
 
-  
+class DBHelper {
 
   /**
    * Database URL.

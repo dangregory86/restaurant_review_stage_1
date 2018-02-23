@@ -1,6 +1,6 @@
 //service worker created following the google developer guide and https://www.sitepoint.com/getting-started-with-service-workers/
 //name the cache and what files need caching
-var CACHE_NAME = 'restaurant-cache-v2';
+var CACHE_NAME = 'restaurant-cache-v3';
 var urlsToCache = [
   '/css/styles.css',
   '/data/restaurants.json',
@@ -18,7 +18,8 @@ var urlsToCache = [
   '/img/7.jpg',
   '/img/8.jpg',
   '/img/9.jpg',
-  '/img/10.jpg'
+  '/img/10.jpg',
+  './'
 ];
 
 //install the service Worker
